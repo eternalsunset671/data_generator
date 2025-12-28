@@ -20,5 +20,34 @@ services:
     depends_on:
       - db
 
+  redash:
+    image: redash/redash:10.1.0.b50633
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+      - redis
+
+  redash-scheduler:
+    image: redash/redash:latest
+    command: scheduler
+    depends_on:
+      - redash
+    environment:
+      - .env
+
+  redash-worker:
+    image: redash/redash:latest
+    command: worker
+    depends_on:
+      - redash
+    environment:
+      - .env
+
+  redis:
+    image: redis:7
+
 volumes:
   pgdata:
