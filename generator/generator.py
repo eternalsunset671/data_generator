@@ -4,8 +4,11 @@ from datetime import datetime, timedelta
 
 import numpy as np
 
-from .database.db import SessionLocal
-from .database.models.weather import WeatherData
+from generator.database.db import SessionLocal
+from generator.database.models.weather import WeatherData, Base
+from generator.database.db import engine
+
+Base.metadata.create_all(bind=engine)
 
 
 DAYS = 365
