@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir poetry \
 
 COPY . /app/
 
-CMD ["poetry", "run", "python", "-m", "generator.generator"]
+CMD ["poetry", "run", "python", "generator.py"]
