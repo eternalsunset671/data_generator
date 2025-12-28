@@ -1,24 +1,17 @@
 FROM python:3.13-slim
 
-ENV POETRY_VERSION=1.8.3 \
-    POETRY_NO_INTERACTION=1 \
-    POETRY_VIRTUALENVS_CREATE=false \
-    PYTHONUNBUFFERED=1
-
 WORKDIR /app
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl \
+    && apt-get install -y gcc libpq-dev python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -sSL https://install.python-poetry.org | python3 -
+COPY рургоject.toml poetry.lock* /app/
 
-ENV PATH="/root/.local/bin:$PATH"
+RUN pip install --no-cache-dir poetry \
+    && poetry config virtualenvs.create false \
+    && poetry install --no-root
 
-COPY pyproject.toml poetry.lock* ./
+COPY . /app/
 
-RUN poetry install --no-root
-
-COPY . .
-
-CMD ["python", "generator.py"]
+CMD ["poetry", "run", "python", "-m", "generator.generator"]
