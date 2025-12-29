@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   db:
     image: postgres:14
@@ -21,7 +19,7 @@ services:
       - db
 
   redash:
-    image: redash/redash:10.1.0.b50633
+    image: redash/redash:latest
     env_file:
       - .env
     ports:
@@ -35,7 +33,7 @@ services:
     command: scheduler
     depends_on:
       - redash
-    environment:
+    env_file:
       - .env
 
   redash-worker:
@@ -43,7 +41,7 @@ services:
     command: worker
     depends_on:
       - redash
-    environment:
+    env_file:
       - .env
 
   redis:
