@@ -12,6 +12,8 @@ Base.metadata.create_all(bind=engine)
 
 
 DAYS = 365
+DAY_BIAS = 90
+HOUR_BIAS = 8
 STEP_HOURS = 1
 
 AVG_TEMP = 10          # среднегодовая температура
@@ -24,11 +26,11 @@ def generate_weather_row(dt: datetime) -> WeatherData:
     # годовая сезонность
     seasonal_temp = (
         AVG_TEMP
-        + TEMP_AMPLITUDE * math.sin(2 * math.pi * day_of_year / 365)
+        + TEMP_AMPLITUDE * math.sin(2 * math.pi * (day_of_year - DAY_BIAS) / 365)
     )
 
     # суточные колебания
-    daily_variation = math.sin(2 * math.pi * dt.hour / 24) * 2
+    daily_variation = math.sin(2 * math.pi * (dt.hour - HOUR_BIAS) / 24) * 2
 
     temperature = seasonal_temp + daily_variation + np.random.normal(0, 1.5)
 
@@ -51,8 +53,8 @@ def generate_weather_row(dt: datetime) -> WeatherData:
 def generate_year():
     session = SessionLocal()
 
-    end_dt = datetime.now().replace(minute=0, second=0, microsecond=0)
-    start_dt = end_dt - timedelta(days=DAYS)
+    start_dt = datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+    end_dt = start_dt + timedelta(days=DAYS)
 
     current_dt = start_dt
 

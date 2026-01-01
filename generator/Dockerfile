@@ -6,7 +6,7 @@ RUN apt-get update \
     && apt-get install -y gcc libpq-dev python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY рургоject.toml poetry.lock* /app/
+COPY pyproject.toml poetry.lock* /app/
 
 RUN pip install --no-cache-dir poetry \
     && poetry config virtualenvs.create false \
